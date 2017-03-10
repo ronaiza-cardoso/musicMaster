@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 import { FormGroup, FormControl, InputGroup, Glyphicon } from 'react-bootstrap'
 import Profile from './Profile'
+import Gallery from './Gallery'
 
 class App extends Component {
 
@@ -11,15 +12,14 @@ class App extends Component {
     this.state = {
       query: '',
       artist: null,
-      tracks: null
+      tracks: []
     }
   }
 
   search() {
-    console.log(this.state);
     const BASE_URL = 'https://api.spotify.com/v1/search?'
     let FETCH_URL = `${BASE_URL}q=${this.state.query}&type=artist&limit=1`
-    const ALBUM_URL =  'https://api.spotify.com/v1/artists/'
+    const ALBUM_URL = 'https://api.spotify.com/v1/artists/'
     fetch(FETCH_URL, {
       method: 'GET'
     })
@@ -34,8 +34,9 @@ class App extends Component {
       })
       .then(response => response.json())
       .then(json => {
-        const { tracks } = json
-        setState({tracks})
+        console.log('artist\'s top tracks:', json);
+        const tracks = json.tracks;
+        this.setState({tracks});
       })
     })
   }
@@ -67,10 +68,10 @@ class App extends Component {
               <div>
                 <Profile
                   artist={this.state.artist}
-                  />
-                <div className="Gallery">
-                  Gallery
-                </div>
+                />
+                <Gallery
+                  tracks={this.state.tracks}
+                />
               </div>
             : <div></div>
           }
